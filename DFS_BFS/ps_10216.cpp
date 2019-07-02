@@ -4,7 +4,6 @@
 #include <vector>
 #include <queue>
 
-// 시간초과 죽일까 ㅡ;
 using namespace std;
 
 int T, N, row, col, r;
