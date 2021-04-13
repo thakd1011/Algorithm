@@ -11,31 +11,31 @@ class maxSumSubarr
         {
             int N = sc.nextInt();
             int[] arr = new int[N];
+	    int[] sum = new int[N];
             int maxVal = -200000000;
 
             for(int i = 0; i < N; i++) {
                 arr[i] = sc.nextInt();
-            }
-
-            int start, end;
-            start = end = 0;
-            int prev = 0;
-            while(end < N) {
-                int localSum = 0;
-                for(int i = start; i <= end; i++) {
-                    localSum += arr[i];
-                }
-                if(localSum < prev) {
-                    start = end + 1;
-                    end++;
+		if(i == 0) {
+                    sum[i] = arr[i];
+                    maxVal = sum[i];
                 }
                 else {
-                    if(localSum > maxVal) {
-                        maxVal = localSum;
+                    sum[i] = sum[i - 1] + arr[i];
+                    if(sum[i] < 0) {
+                        sum[i] = 0;
+                        if(arr[i] > maxVal) {
+                            maxVal = arr[i];
+                        }
                     }
-                    end++;
+                    else {
+                        if(sum[i] > maxVal) {
+                            maxVal = sum[i];
+                        }
+                    }
                 }
             }
+
             System.out.println("#" + test_case + " " + maxVal);
         }
     }
