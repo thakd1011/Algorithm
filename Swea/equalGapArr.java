@@ -35,11 +35,13 @@ class equalism
                 localK -= (diff - value);
             }
         }
-        // 모든 값의 차이가 value보다 작은지 확인하는 과정
-        for(int i = 0; i < N - 1; i++) {
+	for(int i = 0; i < N - 1; i++) {
             diff = mAbs(copiedArr[i], copiedArr[i + 1]);
             if(diff > value) {
-                return false;
+                // 큰 거에서 차이만큼 뺀다.
+                int idx = biggerIdxInArr(i, i + 1);
+                copiedArr[idx] -= (diff - value);
+                localK -= (diff - value);
             }
         }
 
