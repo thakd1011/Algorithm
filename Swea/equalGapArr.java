@@ -7,17 +7,6 @@ class equalism
     static int[] arr;
     static int[] copiedArr;
 
-    static int mAbs(int a, int b) {
-        int ret = a - b;
-        if(ret < 0) return -ret;
-        else return ret;
-    }
-
-    static int biggerIdxInArr(int a, int b) {
-        if(copiedArr[a] > copiedArr[b]) return a;
-        else return b;
-    }
-
     static boolean isPossible(int value) {
         copiedArr = new int[N];
         int localK = K;
@@ -26,32 +15,23 @@ class equalism
         }
 
         int diff;
-        for(int i = 0; i < N - 1; i++) {
-            diff = mAbs(copiedArr[i], copiedArr[i + 1]);
-            if(diff > value) {
-                // 큰 거에서 차이만큼 뺀다.
-                int idx = biggerIdxInArr(i, i + 1);
-                copiedArr[idx] -= (diff - value);
-                localK -= (diff - value);
-            }
-        }
 	for(int i = 0; i < N - 1; i++) {
-            diff = mAbs(copiedArr[i], copiedArr[i + 1]);
+            diff = copiedArr[i + 1] - copiedArr[i];
             if(diff > value) {
-                // 큰 거에서 차이만큼 뺀다.
-                int idx = biggerIdxInArr(i, i + 1);
-                copiedArr[idx] -= (diff - value);
                 localK -= (diff - value);
+                copiedArr[i + 1] -= (diff - value);
             }
+            if(localK < 0) return false;
         }
-
-        if(localK < 0) {
-            return false;
+        for(int i = N - 1; i > 0; i--) {
+            diff = copiedArr[i - 1] - copiedArr[i];
+            if(diff > value) {
+                localK -= (diff - value);
+                copiedArr[i - 1] -= (diff - value);
+            }
+            if(localK < 0) return false;
         }
-        else {
-            return true;
-        }
-        
+        return true;
     }
     
     public static void main(String args[]) throws Exception
@@ -72,7 +52,6 @@ class equalism
                     int temp = arr[i] - arr[i - 1];
                     if(temp < 0) temp *= -1;
                     if(temp > maxValue) maxValue = temp;
-//                    System.out.println(temp);
                 }
             }
 
@@ -92,6 +71,3 @@ class equalism
         }
     }
 }
-
-// 종류는 네 가지 a < b < c , a > b > c, a < b > c , a > b < c
-//
