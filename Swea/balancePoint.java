@@ -7,28 +7,14 @@ class balancePoint
     static int N;
     static double err;
 
-    static double mPow(double x, int n) {
-        double num = x;
-        for(int i = 0; i < n - 1; i++) {
-            x = x * num;
-        }
-        return x;
-    }
-
     static int isPossible(int idx, double point) {
         double leftForce = 0;
         double rightForce = 0;
         double tempForce;
         double dist;
-        // left에 있는건 0부터 idx까지 해당
-        // right에 있는건 idx + 1부터 N-1까지 해당
-        // F = m1*m2/(d*d)
-//        System.out.println("point = " + point);
         for(int i = 0; i < N; i++) {
             dist = point - xCoordination[i];
-            tempForce = (double)(mass[i] / mPow(dist, 2));
-//            System.out.println("dist = " + mPow(dist, 2));
-//            System.out.println("temp F = " + tempForce);
+            tempForce = (double)(mass[i] / dist*dist);
             if(i <= idx) {
                 leftForce += tempForce;
             }
@@ -36,10 +22,10 @@ class balancePoint
                 rightForce += tempForce;
             }
         }
-//        System.out.println("left = " + leftForce + ", right = " + rightForce);
-        double pivot = rightForce - leftForce;
+        
+	double pivot = rightForce - leftForce;
         if(pivot < err && pivot > -err) return 0;
-        else if(pivot < 0) return -1;
+        else if(pivot < err) return -1;
         else return 1;
     }
 
@@ -65,7 +51,7 @@ class balancePoint
 
             double start, end;
             double middle;
-            err = 1 / mPow(10, 13);
+            err = e1-13;
             for(int i = 0; i < N - 1; i++) {
                 start = xCoordination[i];
                 end = xCoordination[i + 1];
