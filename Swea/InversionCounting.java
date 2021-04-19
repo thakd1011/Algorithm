@@ -1,38 +1,57 @@
 import java.util.Scanner;
 
 public class inversion {
+    static int[] numbers;
+    static int[] copiedNumbers;
+    static long ans;
+
+    static void merge(int left, int middle, int right) {
+        int i = left;
+        int j = middle + 1;
+        int idx = left;
+
+        while(i <= middle && j <= right) {
+            if(numbers[i] < numbers[j]) {
+                copiedNumbers[idx++] = numbers[i++];
+            }
+            else {
+                // in case : left value is bigger than the right value, so it has been moved middle - i + 1 times.
+                copiedNumbers[idx++] = numbers[j++];
+                ans += middle - i + 1;
+            }
+        }
+        while(i <= middle) {
+            copiedNumbers[idx++] = numbers[i++];
+        }
+        while(j <= right) {
+            copiedNumbers[idx++] = numbers[j++];
+        }
+
+        for(int k = left; k <= right; k++) {
+            numbers[k] = copiedNumbers[k];
+        }
+    }
+
+    static void MergeSort(int left, int right) {
+        if(left >= right) return;
+        int middle = (left + right) / 2;
+        MergeSort(left, middle);
+        MergeSort(middle + 1, right);
+        merge(left, middle, right);
+    }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int T = sc.nextInt();
         for(int tc = 1; tc <= T; tc++) {
             int N = sc.nextInt();
-            long[][] arr = new long[N][3];
-            boolean[] num = new boolean[N + 1];
-            int ans = 0;
+            numbers = new int[N + 1];
+            copiedNumbers = new int[N + 1];
 
             for(int i = 0; i < N; i++) {
-                arr[i][0] = sc.nextInt();
-                num[(int)arr[i][0]] = true;
-                if(i == 0) {
-                    arr[i][1] = arr[i][0];
-                    arr[i][2] = 0;
-                }
-                else {
-                    if(arr[i][0] > arr[i - 1][1]) {
-                        arr[i][1] = arr[i][0];
-                        arr[i][2] = arr[i - 1][2];
-                    }
-                    else {
-                        int cnt = 0;
-                        arr[i][1] = arr[i - 1][1];
-                        for(long k = arr[i][0] + 1; k <= arr[i - 1][1]; k++) {
-                            if(num[(int)k]) cnt++;
-                        }
-                        arr[i][2] = arr[i - 1][2] + cnt;
-                    }
-                }
+                numbers[i + 1] = sc.nextInt();
             }
-            System.out.println("#" + tc + " " + arr[N - 1][2]);
+            MergeSort(1, N);
+            System.out.println("#" + tc + " " + ans);
             ans = 0;
         }
     }
