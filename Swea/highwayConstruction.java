@@ -14,8 +14,9 @@ public class highwayConstruction {
     static int queue[];
     static int heapSize = 0;
 
-    static void construction(int src) {
-        // start from src, target = dest room.
+    static void construction() {
+        queuePush(1);
+
         while(!queueIsEmpty()) {
             int tempVertexNum = queuePop();
             isVisited[tempVertexNum] = true;
@@ -35,7 +36,10 @@ public class highwayConstruction {
                 if(!isVisited[tempEdge.end]) {
                     queuePush(tempEdge.end);
                     isVisited[tempEdge.end] = true;
-                    connectedEdges.addEdge(tempEdge);
+                    // made a mistake here. I had made linked list with pointer.
+                    // so if I put node which is in linkedlist, it add all the node listed with to the connectedEdges list.
+                    // connectedEdges.addEdge(tempEdge);
+                    connectedEdges.addEdge(new edge(tempEdge.start, tempEdge.end, tempEdge.weight));
                     break;
                 }
             }
@@ -56,19 +60,18 @@ public class highwayConstruction {
                 adj[i] = new linkedList();
             }
 
-            int s, e, t;
+            int s, e, w;
             for(int i = 0; i < M; i++) {
                 s = sc.nextInt();
                 e = sc.nextInt();
-                t = sc.nextInt();
-                adj[s].addEdge(new edge(s, e, t));
-                adj[e].addEdge(new edge(e, s, t));
+                w = sc.nextInt();
+                adj[s].addEdge(new edge(s, e, w));
+                adj[e].addEdge(new edge(e, s, w));
             }
 
             heapInit();
             queueInit();
-            queuePush(1);
-            construction(1);
+            construction();
 
             long sum = 0;
             edge cursor = connectedEdges.head;
