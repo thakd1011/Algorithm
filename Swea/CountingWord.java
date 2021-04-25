@@ -1,47 +1,35 @@
 class UserSolution {
-    final static int MAX_HASH_SIZE = 500001;
-    static double[] hashTb = new double[MAX_HASH_SIZE];
-    static int[] wordCnt = new int[MAX_HASH_SIZE];
+    final static double MAX_HASH_SIZE = 1e+9 + 9;
+    static double[] hashTb;
+    static int[] wordCnt;
 
-    static int findHashKey(double hash) {
-        int hashKey = (int)(hash % MAX_HASH_SIZE);
-        while(true) {
-            if(hashTb[hashKey] == 0) {
-                hashTb[hashKey] = hash;
-                return hashKey;
-            }
-            else if(hashTb[hashKey] == hash ) {
-                return hashKey;
-            }
-            else {
-                hashKey = (hashKey + 1) % MAX_HASH_SIZE;
-            }
+    static double mPow(int a, int b) {
+        double ret = 1;
+        for(int i = 0; i < b; i++) {
+            ret = ret * a;
         }
+        return ret;
     }
 
     public static int FindString(int N, String A, int M, String B) {
         int answer = 0;
+        double sHash = 0;
+        double bHash = 0;
+        double pow = 1;
 
-        double foundWordHash = 5381;
-        for(int i = 0; i < M; i++) {
-            foundWordHash += (int)B.charAt(i);
+        for(int i = M - 1; i >= 0; i--) {
+            sHash += (double)A.charAt(i) * pow;
+            bHash += (double)B.charAt(i) * pow;
+            if(i > 0 ) pow *= 2;
         }
 
-        double subStrHash = 5381;
-        int subStrKey = 0;
-        for(int i = 0; i < M; i++) {
-            subStrHash += (int)A.charAt(i);
-            subStrKey = findHashKey(subStrHash);
-            wordCnt[subStrKey]++;
+        if(sHash == bHash) answer++;
+
+        for(int i = 1; i <= N - M; i++) {
+            sHash = 2 * (sHash - (double)A.charAt(i - 1) * pow) + (int)A.charAt(i + M - 1);
+            if(sHash == bHash) answer++;
         }
 
-        for(int i = 1; i < N - M; i++) {
-            subStrHash = subStrHash - (int)A.charAt(i - 1) + (int)A.charAt(i + M);
-            subStrKey = findHashKey(subStrHash);
-            wordCnt[subStrKey]++;
-        }
-
-        answer = wordCnt[findHashKey(foundWordHash)];
         return answer;
     }
 }
