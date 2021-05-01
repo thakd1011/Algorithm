@@ -1,13 +1,14 @@
 import java.util.Scanner;
 public class wordOverTwoTimes {
-    static long MOD = 20000019;
-    static int HASH_SIZE = 20000019;
+    static long MOD = 99999999;
+    static int HASH_SIZE = 10000039;
 
     static String S;
     static int L;
     static long[] hashVal;
     static long[] pows;
-    static long[][] hashTb = new long[HASH_SIZE][2];
+    static long[] hashTb;
+    static long[] strIdx;
 
     static long localMod(long n) {
         if(n >= 0) {
@@ -22,15 +23,15 @@ public class wordOverTwoTimes {
 
         int hashKey = (int)(hash % HASH_SIZE);
         while(true) {
-            if (hashTb[hashKey][0] == 0) {
-                hashTb[hashKey][0] = hash;
-                hashTb[hashKey][1] = idx;
+            if (hashTb[hashKey] == 0) {
+                hashTb[hashKey] = hash;
+                strIdx[hashKey] = idx;
                 return false;
             }
-            else if (hashTb[hashKey][0] == hash) {
+            else if (hashTb[hashKey] == hash) {
                 boolean sameWord = true;
                 for(int i = 0; i < n; i++) {
-                    if(S.charAt(idx + i - 1) != S.charAt((int)hashTb[hashKey][1] + i - 1)) {
+                    if(S.charAt(idx + i - 1) != S.charAt((int)strIdx[hashKey] + i - 1)) {
                         sameWord = false;
                         break;
                     }
@@ -75,6 +76,8 @@ public class wordOverTwoTimes {
             int start = 1, end = L, k;
             hashVal = new long[L + 1];
             pows = new long[L + 1];
+            hashTb = new long[HASH_SIZE];
+            strIdx = new long[HASH_SIZE];
 
             long pow = 1;
             hashVal[0] = 0;
@@ -97,6 +100,10 @@ public class wordOverTwoTimes {
                 }
             }
             System.out.println("#" + tc + " " + (ans));
+            hashVal = null;
+            pows = null;
+            hashTb = null;
+            strIdx = null;
         }
     }
 
